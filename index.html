@@ -100,6 +100,12 @@
                             </li>
                             <li class="mb-1">
                                 <a href="#" class="flex items-center p-2 rounded hover:bg-blue-700">
+                                    <i class="fas fa-database mr-3"></i>
+                                    <span class="nav-text">Base de données</span>
+                                </a>
+                            </li>
+                            <li class="mb-1">
+                                <a href="#" class="flex items-center p-2 rounded hover:bg-blue-700">
                                     <i class="fas fa-cog mr-3"></i>
                                     <span class="nav-text">Paramètres</span>
                                 </a>
@@ -148,7 +154,7 @@
             <!-- Dashboard Content -->
             <main class="p-6">
                 <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
                     <div class="dashboard-card bg-white rounded-lg shadow p-6 transition duration-300">
                         <div class="flex items-center justify-between">
                             <div>
@@ -210,6 +216,22 @@
                         <div class="mt-4">
                             <span class="text-red-500 text-sm font-medium"><i class="fas fa-arrow-down mr-1"></i> 2%</span>
                             <span class="text-gray-500 text-sm ml-2">vs mois dernier</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-lg shadow p-6 transition duration-300">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Base de données</p>
+                                <h3 class="text-3xl font-bold mt-2">Connectée</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-database text-green-500 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span class="text-green-500 text-sm font-medium"><i class="fas fa-check-circle mr-1"></i> Active</span>
+                            <span class="text-gray-500 text-sm ml-2">MySQL 8.0</span>
                         </div>
                     </div>
                 </div>
