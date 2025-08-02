@@ -855,5 +855,197 @@
             overlay.classList.remove('active');
         }
     </script>
+        <script>
+        // Fonction pour gérer le basculement de la barre latérale
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '80px';
+            } else {
+                mainContent.style.marginLeft = '256px'; // La largeur initiale de la sidebar (w-64)
+            }
+        });
+
+        // Fonction pour gérer la connexion de l'étudiant
+        document.getElementById('studentLoginForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Empêche l'envoi du formulaire
+
+            // Récupérer les valeurs du formulaire
+            const studentId = document.getElementById('studentId').value;
+            const studentPassword = document.getElementById('studentPassword').value;
+
+            // Logique de vérification (vous pouvez remplacer cela par un appel API)
+            if (studentId === 'student' && studentPassword === 'password') {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('studentMenu').classList.remove('hidden');
+                document.getElementById('studentDashboard').classList.remove('hidden');
+                // Vous pouvez mettre à jour les informations de l'étudiant ici
+                updateStudentInfo();
+                showSection('studentDashboard');
+            } else {
+                alert('Identifiant ou mot de passe incorrect.');
+            }
+        });
+
+        // Fonction pour gérer la navigation entre les sections de la vue étudiant
+        document.getElementById('studentDashboardTab').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('studentDashboard');
+            setActiveTab(this);
+        });
+
+        document.getElementById('studentGradesTab').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('studentGrades');
+            setActiveTab(this);
+        });
+        
+        document.getElementById('studentFinanceTab').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('studentFinance');
+            setActiveTab(this);
+        });
+        
+        document.getElementById('studentHelpTab').addEventListener('click', function(event) {
+            event.preventDefault();
+            showSection('studentHelp');
+            setActiveTab(this);
+        });
+
+        function showSection(sectionId) {
+            // Masquer toutes les sections
+            document.querySelectorAll('#mainApp main > div').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Afficher la section demandée
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function setActiveTab(activeElement) {
+            // Retirer la classe 'active-tab' de tous les onglets étudiants
+            document.querySelectorAll('#studentMenu a').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            // Ajouter la classe 'active-tab' à l'élément cliqué
+            activeElement.classList.add('active-tab');
+        }
+
+        // Fonction fictive pour mettre à jour les informations de l'étudiant (à remplacer par de vraies données)
+        function updateStudentInfo() {
+            // Remplir les informations du tableau de bord étudiant
+            document.getElementById('studentName').textContent = 'Votre Nom Prénom';
+            document.getElementById('studentClass').textContent = 'Licence 2 - Informatique';
+            document.getElementById('studentLevel').textContent = 'L2';
+            document.getElementById('studentYear').textContent = '2024-2025';
+
+            const totalFees = 500000;
+            const paidFees = 400000;
+            const remainingFees = totalFees - paidFees;
+            const paymentStatus = remainingFees > 0 ? 'Partiellement payé' : 'À jour';
+            const statusColor = remainingFees > 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white';
+
+            document.getElementById('totalFees').textContent = totalFees.toLocaleString('fr-FR');
+            document.getElementById('paidFees').textContent = paidFees.toLocaleString('fr-FR');
+            document.getElementById('remainingFees').textContent = remainingFees.toLocaleString('fr-FR');
+            document.getElementById('paymentStatus').textContent = paymentStatus;
+            document.getElementById('paymentStatus').className = `px-2 py-1 rounded text-xs ${statusColor}`;
+
+            // Remplir les notes fictives
+            const gradesData = [
+                { matiere: 'Algorithmique', note: 15.5, coef: 3, moyenneClasse: 14.2, appreciation: 'Très bien' },
+                { matiere: 'Programmation Web', note: 18, coef: 4, moyenneClasse: 16.1, appreciation: 'Excellent' },
+                { matiere: 'Bases de données', note: 12, coef: 3, moyenneClasse: 13.5, appreciation: 'Satisfaisant' },
+                { matiere: 'Mathématiques', note: 9, coef: 2, moyenneClasse: 11.5, appreciation: 'Insuffisant' },
+            ];
+
+            const gradesTableBody = document.getElementById('gradesTableBody');
+            gradesTableBody.innerHTML = '';
+            let totalGradePoints = 0;
+            let totalCoefficients = 0;
+
+            gradesData.forEach(grade => {
+                const row = gradesTableBody.insertRow();
+                row.className = 'hover:bg-gray-50';
+                row.insertCell(0).textContent = grade.matiere;
+                row.insertCell(1).textContent = grade.note;
+                row.insertCell(2).textContent = grade.coef;
+                row.insertCell(3).textContent = grade.moyenneClasse;
+                row.insertCell(4).textContent = grade.appreciation;
+                totalGradePoints += grade.note * grade.coef;
+                totalCoefficients += grade.coef;
+            });
+            
+            const averageGrade = (totalGradePoints / totalCoefficients).toFixed(2);
+            document.getElementById('averageGrade').textContent = averageGrade;
+            document.getElementById('classRank').textContent = '2 / 30'; // Donnée fictive
+            document.getElementById('appreciation').textContent = averageGrade >= 12 ? 'Admis' : 'Non Admis'; // Logique simple
+
+            // Charger les graphiques
+            loadCharts();
+        }
+
+        function loadCharts() {
+            // S'assurer que Chart.js est chargé
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js n'est pas chargé. Assurez-vous que le script est inclus.");
+                return;
+            }
+
+            // Graphique des notes
+            const gradesCtx = document.getElementById('gradesChart').getContext('2d');
+            new Chart(gradesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Algorithmique', 'Programmation Web', 'Bases de données', 'Mathématiques'],
+                    datasets: [{
+                        label: 'Notes',
+                        data: [15.5, 18, 12, 9],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 20
+                        }
+                    }
+                }
+            });
+
+            // Graphique du classement
+            const rankingCtx = document.getElementById('rankingChart').getContext('2d');
+            new Chart(rankingCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Trimestre 1', 'Trimestre 2', 'Trimestre 3'],
+                    datasets: [{
+                        label: 'Moyenne Générale',
+                        data: [13.2, 14.5, 15.1],
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 20
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
 </body>
 </html>
